@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rankings PvP</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.modeIcons{
+display:flex;
+gap:8px;
+margin-left:auto;
+flex-wrap:wrap;
+}
+
+.modeIcon{
+display:flex;
+flex-direction:column;
+align-items:center;
+font-size:10px;
+color:#ffd369;
+}
+
+.modeIcon img{
+width:18px;
+height:18px;
+}
+
+.modeIcon.empty{
+opacity:.25;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div class="logo">ESMERALDA PVP</div>
+<nav><div>Inicio</div><div>Rankings</div><div>Discord</div></nav>
+<input class="search" id="search" placeholder="Buscar jugador...">
+</header>
+
+<div class="tabs" id="tabs"></div>
+<div class="container" id="listsContainer"></div>
+
+<div class="modal" id="playerModal">
+
+<div class="profileBox">
+
+<div class="close" onclick="closeModal()">✕</div>
+
+<img id="modalAvatar" class="profileAvatar">
+
+<h1 id="modalName"></h1>
+
+<div class="positionBox">
+<span id="modalGlobal"></span>
+<span class="points" id="modalPoints"></span>
+</div>
+
+<h3 class="tiersTitle">TIERS</h3>
+
+<div class="tiersRow" id="modalTiers"></div>
+
+</div>
+
+</div>
+
+<script>
+
+/*
+CONFIGURACIÓN DE MODOS
+*/
+
+const modes={
+ global:{icon:"icons/global.png"},
+ uhc:{icon:"icons/uhc.svg"},
+ pot:{icon:"icons/pot.svg"},
+ sword:{icon:"icons/sword.svg"},
+ axe:{icon:"icons/axe.svg"},
+ vanilla:{icon:"icons/vanilla.svg"},
+ netherop:{icon:"icons/nethop.svg"},
+ smp:{icon:"icons/smp.svg"},
+ mace:{icon:"icons/mace.svg"}
+}
+
+/* LISTAS */
+let rankings = {}; // Se llenará desde players.json
+
+/* PUNTOS */
+
+const pointsTable={
+tier5_low:1,
+tier5_high:2,
+tier4_low:3,
+tier4_high:4,
+tier3_low:6,
+tier3_high:10,
+tier2_low:20,
+tier2_high:30,
+tier1_low:45,
+tier1_high:60
+}
+
+const tabsContainer=document.getElementById("tabs")
+const listsContainer=document.getElementById("listsContainer")
+const modalAvatar=document.getElementById("modalAvatar")
+const modalName=document.getElementById("modalName")
+const modalPoints=document.getElementById("modalPoints")
+const modalGlobal=document.getElementById("modalGlobal")
+const modalTiers=document.getElementById("modalTiers")
+
+function createTabs(){
+Object.keys(modes).forEach((mode,i)=>{
+
+const tab=document.createElement("div")
+tab.className="tab"
+if(i===0)tab.classList.add("active")
+
+tab.innerHTML=`<img src="${modes[mode].icon}"> ${mode.toUpperCase()}`
+
+tab.onclick=()=>{
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+tab.classList.add("active")
+showMode(mode)
+}
+
+tabsContainer.appendChild(tab)
+
+})
+}
+
+function createTier(title,players,className){
+
+players.sort((a,b)=>{
+if(a.level===b.level)return 0
+return a.level==="high"?-1:1
+})
+
+let list=""
+
+players.forEach(p=>{
+list+=`<div class="player ${p.level}" onclick="openPlayer('${p.name}')">
+<img class="avatar" src="https://mc-heads.net/avatar/${p.name}" onerror="this.src='https://mc-heads.net/avatar/Steve'">
+${p.name}
+</div>`
+})
+
+return `<div class="tier ${className}"><h2>${title}</h2><ul>${list}</ul></div>`
+}
+
+function calculateTotals(){
+
+const totals={}
+
+Object.values(rankings).forEach(mode=>{
+Object.entries(mode).forEach(([tier,list])=>{
+list.forEach(p=>{
+const key=`${tier}_${p.level}`
+const pts=pointsTable[key]||0
+if(!totals[p.name])totals[p.name]=0
+totals[p.name]+=pts
+})
+})
+})
+
+return totals
+}
+
+/* ABRIR PERFIL */
+
+function openPlayer(name){
+
+const totals=calculateTotals()
+
+if(!totals[name])return
+
+const sorted=Object.entries(totals)
+.map(([n,p])=>({name:n,points:p}))
+.sort((a,b)=>b.points-a.points)
+
+const rank=sorted.findIndex(p=>p.name===name)+1
+
+modalAvatar.src=`https://mc-heads.net/avatar/${name}`
+modalAvatar.onerror=()=>modalAvatar.src="https://mc-heads.net/avatar/Steve"
+
+modalName.innerText=name
+modalPoints.innerText=`(${totals[name]} points)`
+modalGlobal.innerHTML=`${rank}. 🏆 GLOBAL`
+
+/* ICONOS */
+
+let icons=""
+
+Object.entries(modes).forEach(([mode,data])=>{
+
+if(mode==="global")return
+
+let tierLabel=""
+let found=false
+
+Object.entries(rankings[mode]).forEach(([tier,players])=>{
+players.forEach(pl=>{
+if(pl.name===name){
+tierLabel=(pl.level==="high"?"HT":"LT")+tier.replace("tier","")
+found=true
+}
+})
+})
+
+if(found){
+
+icons+=`
+<div class="tierIcon">
+<img src="${data.icon}">
+<span>${tierLabel}</span>
+</div>
+`
+
+}else{
+
+icons+=`
+<div class="tierIcon empty">
+<img src="${data.icon}">
+<span>-</span>
+</div>
+`
+
+}
+
+})
+
+modalTiers.innerHTML=icons
+
+playerModal.classList.add("active")
+
+}
+
+/* GLOBAL CON ICONOS */
+
+function showGlobal(){
+
+const totals=calculateTotals()
+
+const sorted=Object.entries(totals)
+.map(([name,points])=>({name,points}))
+.sort((a,b)=>b.points-a.points)
+
+let list=""
+
+sorted.forEach((p,i)=>{
+
+let icons=""
+
+Object.entries(modes).forEach(([mode,data])=>{
+
+if(mode==="global")return
+
+let tierLabel=""
+let found=false
+
+Object.entries(rankings[mode]).forEach(([tier,players])=>{
+players.forEach(pl=>{
+if(pl.name===p.name){
+tierLabel=(pl.level==="high"?"HT":"LT")+tier.replace("tier","")
+found=true
+}
+})
+})
+
+if(found){
+
+icons+=`
+<div class="tierIcon">
+<img src="${data.icon}">
+<span>${tierLabel}</span>
+</div>
+`
+
+}else{
+
+icons+=`
+<div class="tierIcon empty">
+<img src="${data.icon}">
+<span>-</span>
+</div>
+`
+
+}
+
+})
+
+list+=`
+
+<div class="leaderboardCard" onclick="openPlayer('${p.name}')">
+
+<div class="rankNumber">#${i+1}</div>
+
+<img class="leaderAvatar"
+src="https://mc-heads.net/avatar/${p.name}"
+onerror="this.src='https://mc-heads.net/avatar/Steve'">
+
+<div class="leaderInfo">
+
+<div class="leaderName">${p.name}</div>
+<div class="leaderPoints">${p.points} puntos)</div>
+
+</div>
+
+<div class="leaderTiers">
+${icons}
+</div>
+
+</div>
+
+`
+
+})
+
+listsContainer.innerHTML=`<div class="tier"><h2>🏆 TOP GLOBAL</h2><ul>${list}</ul></div>`
+}
+
+function showMode(mode){
+
+if(mode==="global"){
+showGlobal()
+return
+}
+
+const data=rankings[mode]
+
+listsContainer.innerHTML=`
+<div class="grid">
+${createTier("🏆 Tier 1",data.tier1,"tier1")}
+${createTier("🥈 Tier 2",data.tier2,"tier2")}
+${createTier("🥉 Tier 3",data.tier3,"tier3")}
+${createTier("Tier 4",data.tier4,"tier4")}
+${createTier("Tier 5",data.tier5,"tier5")}
+</div>`
+
+}
+
+/* BUSCADOR */
+
+document.getElementById("search").addEventListener("keydown",e=>{
+
+if(e.key!=="Enter")return
+
+const name=e.target.value.trim()
+if(!name)return
+
+const totals=calculateTotals()
+
+if(!totals[name]){
+alert("Jugador no encontrado en las listas")
+return
+}
+
+openPlayer(name)
+
+})
+
+function closeModal(){
+playerModal.classList.remove("active")
+}
+
+/* GENERAR RANKINGS DESDE JSON */
+
+function generateRankings(playersList){
+Object.keys(modes).forEach(mode=>{
+if(mode==="global")return
+rankings[mode]={ tier1:[], tier2:[], tier3:[], tier4:[], tier5:[] }
+})
+playersList.forEach(p=>{
+if(rankings[p.mode]){
+rankings[p.mode][`tier${p.tier}`].push({name:p.name, level:p.level})
+}
+})
+}
+
+/* CARGAR JSON DE JUGADORES Y INICIAR */
+
+fetch("players.json")
+.then(res=>res.json())
+.then(playersList=>{
+generateRankings(playersList)
+createTabs()
+showMode("global")
+})
+.catch(err=>console.error("Error cargando jugadores:",err))
+
+</script>
+
+</body>
+</html>
