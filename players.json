@@ -32,7 +32,7 @@
   {
     "name": "test",
     "mode": "uhc",
-    "tier": 1,
-    "level": "high"
+    "tier": 2,
+    "level": "low"
   }
 ]
