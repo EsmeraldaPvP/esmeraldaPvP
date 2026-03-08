@@ -34,11 +34,5 @@
     "mode": "uhc",
     "tier": 1,
     "level": "low"
-  },
-  {
-    "name": "spreendmc",
-    "mode": "axe",
-    "tier": 1,
-    "level": "low"
   }
 ]
