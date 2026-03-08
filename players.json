@@ -28,11 +28,5 @@
     "mode": "vanilla",
     "tier": 5,
     "level": "high"
-  },
-  {
-    "name": "test",
-    "mode": "uhc",
-    "tier": 2,
-    "level": "low"
   }
 ]
