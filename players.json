@@ -28,5 +28,11 @@
     "mode": "vanilla",
     "tier": 5,
     "level": "high"
+  },
+  {
+    "name": "isokamii",
+    "mode": "uhc",
+    "tier": 1,
+    "level": "high"
   }
 ]
