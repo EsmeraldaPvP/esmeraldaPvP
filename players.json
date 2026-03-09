@@ -52,5 +52,11 @@
     "mode": "netherop",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "smp",
+    "tier": 1,
+    "level": "high"
   }
 ]
