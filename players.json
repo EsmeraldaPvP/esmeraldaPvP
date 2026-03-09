@@ -22,5 +22,11 @@
     "mode": "uhc",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "sword",
+    "tier": 5,
+    "level": "low"
   }
 ]
