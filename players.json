@@ -10,5 +10,11 @@
     "mode": "uhc",
     "tier": 1,
     "level": "low"
+  },
+  {
+    "name": "Katrukayen",
+    "mode": "uhc",
+    "tier": 1,
+    "level": "high"
   }
 ]
