@@ -16,5 +16,11 @@
     "mode": "uhc",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "uhc",
+    "tier": 1,
+    "level": "high"
   }
 ]
