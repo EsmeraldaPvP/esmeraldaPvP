@@ -46,5 +46,11 @@
     "mode": "vanilla",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "netherop",
+    "tier": 1,
+    "level": "high"
   }
 ]
