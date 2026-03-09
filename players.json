@@ -40,5 +40,11 @@
     "mode": "pot",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "vanilla",
+    "tier": 1,
+    "level": "high"
   }
 ]
