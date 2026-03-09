@@ -58,5 +58,11 @@
     "mode": "smp",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "mace",
+    "tier": 1,
+    "level": "high"
   }
 ]
