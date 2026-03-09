@@ -28,5 +28,11 @@
     "mode": "sword",
     "tier": 5,
     "level": "low"
+  },
+  {
+    "name": "XOIT131",
+    "mode": "axe",
+    "tier": 3,
+    "level": "high"
   }
 ]
