@@ -70,5 +70,11 @@
     "mode": "uhc",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "ElArticoShiro",
+    "mode": "sword",
+    "tier": 1,
+    "level": "high"
   }
 ]
