@@ -64,5 +64,11 @@
     "mode": "mace",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "ElArticoShiro",
+    "mode": "uhc",
+    "tier": 1,
+    "level": "high"
   }
 ]
