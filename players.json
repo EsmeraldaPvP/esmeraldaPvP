@@ -76,5 +76,11 @@
     "mode": "sword",
     "tier": 1,
     "level": "high"
+  },
+  {
+    "name": "StaAri310",
+    "mode": "sword",
+    "tier": 4,
+    "level": "low"
   }
 ]
