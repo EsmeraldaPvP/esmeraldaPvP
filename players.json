@@ -88,5 +88,11 @@
     "mode": "sword",
     "tier": 3,
     "level": "low"
+  },
+  {
+    "name": "testSinRango",
+    "mode": "sword",
+    "tier": 1,
+    "level": "high"
   }
 ]
