@@ -88,11 +88,5 @@
     "mode": "sword",
     "tier": 3,
     "level": "low"
-  },
-  {
-    "name": "test",
-    "mode": "sword",
-    "tier": 5,
-    "level": "high"
   }
 ]
