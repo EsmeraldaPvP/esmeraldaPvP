@@ -88,11 +88,5 @@
     "mode": "sword",
     "tier": 3,
     "level": "low"
-  },
-  {
-    "name": "testeoFinal",
-    "mode": "sword",
-    "tier": 1,
-    "level": "high"
   }
 ]
